@@ -1,3 +1,4 @@
+# Ejercicios de taller
 class Calificador:
     def __init__(self):
         self.notas = []
@@ -458,3 +459,584 @@ class AnalizadorPatrones:
             self.palabras.append(palabra)
 ap = AnalizadorPatrones()
 print(ap.agrupar_por_longitud("el gato está aquí"))
+
+# Ejercicios de práctica
+class GestorAutos:
+    def __init__(self):
+        self.autos = {}
+    def validar_anio(self, anio):
+        return 1950 <= anio <= 2026
+    def registrar_auto(self, placa, marca, anio):
+        if self.validar_anio(anio):
+            self.autos[placa] = {"marca": marca, "anio": anio}
+        return self.autos
+    def registrar_multiples(self, *autos):
+        for placa, marca, anio in autos:
+            self.registrar_auto(placa, marca, anio)
+        return self.autos
+    def autos_por_anio(self, anio_min):
+        resultado = []
+        for placa, datos in self.autos.items():
+            if datos["anio"] >= anio_min:
+                resultado.append(placa)
+        return resultado
+ga = GestorAutos()
+ga.registrar_multiples(("ABC123", "Toyota", 2018), ("XYZ999", "Ford", 2010), ("LMN111", "Honda", 2022))
+print(ga.autos_por_anio(2015))
+
+
+class Biblioteca:
+    def __init__(self):
+        self.libros = {}
+    def agregar_libro(self, titulo, autor, paginas):
+        self.libros[titulo] = {"autor": autor, "paginas": paginas}
+    def libros_de_autor(self, autor):
+        resultado = []
+        for titulo, datos in self.libros.items():
+            if datos["autor"].lower() == autor.lower():
+                resultado.append(titulo)
+        return resultado
+    def libro_mas_largo(self):
+        if len(self.libros) == 0:
+            return None
+        mayor_titulo = None
+        mayor_paginas = 0
+        for titulo, datos in self.libros.items():
+            if datos["paginas"] > mayor_paginas:
+                mayor_paginas = datos["paginas"]
+                mayor_titulo = titulo
+        return mayor_titulo, mayor_paginas
+bib = Biblioteca()
+bib.agregar_libro("Cien años", "García Márquez", 417)
+bib.agregar_libro("El otoño", "García Márquez", 272)
+bib.agregar_libro("Rayuela", "Cortázar", 635)
+print(bib.libros_de_autor("García Márquez"))
+print(bib.libro_mas_largo())
+
+
+class Zoologico:
+    def __init__(self):
+        self.animales = []
+    def agregar_animal(self, nombre, especie, edad):
+        self.animales.append({"nombre": nombre, "especie": especie, "edad": edad})
+    def agregar_multiples(self, *animales):
+        for nombre, especie, edad in animales:
+            self.agregar_animal(nombre, especie, edad)
+    def contar_por_especie(self):
+        conteo = {}
+        for animal in self.animales:
+            especie = animal["especie"]
+            if especie not in conteo:
+                conteo[especie] = 0
+            conteo[especie] += 1
+        return conteo
+    def animal_mas_viejo(self):
+        if len(self.animales) == 0:
+            return None
+        mayor = self.animales[0]
+        for animal in self.animales:
+            if animal["edad"] > mayor["edad"]:
+                mayor = animal
+        return mayor["nombre"]
+zoo = Zoologico()
+zoo.agregar_multiples(("Simba", "león", 8), ("Dumbo", "elefante", 15), ("Nala", "león", 6))
+print(zoo.contar_por_especie())
+print(zoo.animal_mas_viejo())
+
+
+class Recetario:
+    def __init__(self):
+        self.recetas = {}
+    def agregar_receta(self, nombre, ingredientes):
+        self.recetas[nombre] = list(ingredientes)
+    def recetas_con_ingrediente(self, ingrediente):
+        resultado = []
+        for nombre, ingredientes in self.recetas.items():
+            if ingrediente.lower() in [i.lower() for i in ingredientes]:
+                resultado.append(nombre)
+        return resultado
+    def receta_mas_ingredientes(self):
+        if len(self.recetas) == 0:
+            return None
+        mayor_nombre = None
+        mayor = 0
+        for nombre, ingredientes in self.recetas.items():
+            if len(ingredientes) > mayor:
+                mayor = len(ingredientes)
+                mayor_nombre = nombre
+        return mayor_nombre
+rec = Recetario()
+rec.agregar_receta("pasta", ["harina", "huevo", "sal"])
+rec.agregar_receta("ensalada", ["lechuga", "tomate", "aceite", "sal"])
+print(rec.recetas_con_ingrediente("sal"))
+print(rec.receta_mas_ingredientes())
+
+
+class Playlist:
+    def __init__(self):
+        self.canciones = []
+    def agregar_cancion(self, titulo, artista, duracion):
+        self.canciones.append({"titulo": titulo, "artista": artista, "duracion": duracion})
+    def agregar_multiples(self, *canciones):
+        for titulo, artista, duracion in canciones:
+            self.agregar_cancion(titulo, artista, duracion)
+    def duracion_total(self):
+        return sum(c["duracion"] for c in self.canciones)
+    def canciones_de_artista(self, artista):
+        resultado = []
+        for c in self.canciones:
+            if c["artista"].lower() == artista.lower():
+                resultado.append(c["titulo"])
+        return resultado
+pl = Playlist()
+pl.agregar_multiples(("Imagine", "Lennon", 183), ("Hey Jude", "Beatles", 431), ("Yesterday", "Beatles", 125))
+print(pl.duracion_total())
+print(pl.canciones_de_artista("Beatles"))
+
+
+class Cartelera:
+    def __init__(self):
+        self.peliculas = {}
+    def agregar_pelicula(self, titulo, anio, puntaje):
+        if 0 <= puntaje <= 10:
+            self.peliculas[titulo] = {"anio": anio, "puntaje": puntaje}
+    def peliculas_por_anio(self, anio_min, anio_max):
+        resultado = []
+        for titulo, datos in self.peliculas.items():
+            if anio_min <= datos["anio"] <= anio_max:
+                resultado.append(titulo)
+        return resultado
+    def mejor_pelicula(self):
+        if len(self.peliculas) == 0:
+            return None
+        mejor = None
+        mejor_puntaje = -1
+        for titulo, datos in self.peliculas.items():
+            if datos["puntaje"] > mejor_puntaje:
+                mejor_puntaje = datos["puntaje"]
+                mejor = titulo
+        return mejor, mejor_puntaje
+cin = Cartelera()
+cin.agregar_pelicula("Matrix", 1999, 8.7)
+cin.agregar_pelicula("Inception", 2010, 8.8)
+cin.agregar_pelicula("Titanic", 1997, 7.9)
+print(cin.peliculas_por_anio(1998, 2012))
+print(cin.mejor_pelicula())
+
+
+class Banco:
+    def __init__(self):
+        self.cuentas = {}
+    def abrir_cuenta(self, titular, saldo=0):
+        if titular not in self.cuentas:
+            self.cuentas[titular] = saldo
+        return self.cuentas[titular]
+    def depositar(self, titular, monto):
+        if titular not in self.cuentas or monto <= 0:
+            return False
+        self.cuentas[titular] += monto
+        return True
+    def retirar(self, titular, monto):
+        if titular not in self.cuentas or monto <= 0:
+            return False
+        if self.cuentas[titular] < monto:
+            return False
+        self.cuentas[titular] -= monto
+        return True
+    def saldo_total(self):
+        return sum(self.cuentas.values())
+ban = Banco()
+ban.abrir_cuenta("Ana", 100)
+ban.abrir_cuenta("Bob", 50)
+print(ban.depositar("Ana", 40))
+print(ban.retirar("Bob", 20))
+print(ban.saldo_total())
+
+
+class Hotel:
+    def __init__(self):
+        self.habitaciones = {}
+    def registrar_habitacion(self, numero, tipo, precio):
+        self.habitaciones[numero] = {"tipo": tipo, "precio": precio, "ocupada": False}
+    def ocupar(self, numero):
+        if numero not in self.habitaciones:
+            return False
+        if self.habitaciones[numero]["ocupada"]:
+            return False
+        self.habitaciones[numero]["ocupada"] = True
+        return True
+    def disponibles(self):
+        resultado = []
+        for numero, datos in self.habitaciones.items():
+            if not datos["ocupada"]:
+                resultado.append(numero)
+        return resultado
+    def habitaciones_por_precio(self, precio_max):
+        resultado = []
+        for numero, datos in self.habitaciones.items():
+            if datos["precio"] <= precio_max:
+                resultado.append(numero)
+        return resultado
+ht = Hotel()
+ht.registrar_habitacion(101, "simple", 40)
+ht.registrar_habitacion(202, "doble", 70)
+ht.ocupar(101)
+print(ht.disponibles())
+print(ht.habitaciones_por_precio(50))
+
+
+class Restaurante:
+    def __init__(self):
+        self.pedidos = []
+    def agregar_pedido(self, mesa, plato, precio):
+        self.pedidos.append({"mesa": mesa, "plato": plato, "precio": precio})
+    def total_mesa(self, mesa):
+        total = 0
+        for pedido in self.pedidos:
+            if pedido["mesa"] == mesa:
+                total += pedido["precio"]
+        return total
+    def platos_caros(self, minimo):
+        resultado = []
+        for pedido in self.pedidos:
+            if pedido["precio"] >= minimo:
+                resultado.append(pedido["plato"])
+        return resultado
+res = Restaurante()
+res.agregar_pedido(1, "sopa", 4.5)
+res.agregar_pedido(1, "steak", 12.0)
+res.agregar_pedido(2, "ensalada", 6.0)
+print(res.total_mesa(1))
+print(res.platos_caros(6))
+
+
+class Jardin:
+    def __init__(self):
+        self.plantas = {}
+    def sembrar(self, nombre, tipo, riegos):
+        self.plantas[nombre] = {"tipo": tipo, "riegos": riegos}
+    def regar(self, nombre):
+        if nombre not in self.plantas:
+            return False
+        self.plantas[nombre]["riegos"] += 1
+        return True
+    def plantas_secas(self, minimo_riegos):
+        resultado = []
+        for nombre, datos in self.plantas.items():
+            if datos["riegos"] < minimo_riegos:
+                resultado.append(nombre)
+        return resultado
+    def contar_por_tipo(self):
+        conteo = {}
+        for datos in self.plantas.values():
+            tipo = datos["tipo"]
+            if tipo not in conteo:
+                conteo[tipo] = 0
+            conteo[tipo] += 1
+        return conteo
+jd = Jardin()
+jd.sembrar("rosa", "flor", 2)
+jd.sembrar("albahaca", "hierba", 0)
+jd.regar("rosa")
+print(jd.plantas_secas(2))
+print(jd.contar_por_tipo())
+
+
+class Academia:
+    def __init__(self):
+        self.cursos = {}
+    def crear_curso(self, nombre):
+        if nombre not in self.cursos:
+            self.cursos[nombre] = []
+    def inscribir(self, curso, estudiante):
+        if curso in self.cursos:
+            self.cursos[curso].append(estudiante)
+    def curso_mas_lleno(self):
+        if len(self.cursos) == 0:
+            return None
+        mayor_curso = None
+        mayor = -1
+        for curso, alumnos in self.cursos.items():
+            if len(alumnos) > mayor:
+                mayor = len(alumnos)
+                mayor_curso = curso
+        return mayor_curso
+    def estudiantes_unicos(self):
+        unicos = set()
+        for alumnos in self.cursos.values():
+            for alumno in alumnos:
+                unicos.add(alumno)
+        return unicos
+ac = Academia()
+ac.crear_curso("Python")
+ac.crear_curso("Excel")
+ac.inscribir("Python", "Ana")
+ac.inscribir("Python", "Luis")
+ac.inscribir("Excel", "Ana")
+print(ac.curso_mas_lleno())
+print(ac.estudiantes_unicos())
+
+
+class Gimnasio:
+    def __init__(self):
+        self.entrenos = []
+    def registrar_entreno(self, persona, ejercicio, calorias):
+        self.entrenos.append({"persona": persona, "ejercicio": ejercicio, "calorias": calorias})
+    def calorias_persona(self, persona):
+        total = 0
+        for entreno in self.entrenos:
+            if entreno["persona"] == persona:
+                total += entreno["calorias"]
+        return total
+    def ejercicios_unicos(self):
+        resultado = set()
+        for entreno in self.entrenos:
+            resultado.add(entreno["ejercicio"])
+        return resultado
+gim = Gimnasio()
+gim.registrar_entreno("Ana", "correr", 300)
+gim.registrar_entreno("Ana", "pesas", 150)
+gim.registrar_entreno("Bob", "correr", 200)
+print(gim.calorias_persona("Ana"))
+print(gim.ejercicios_unicos())
+
+
+class Aerolinea:
+    def __init__(self):
+        self.vuelos = []
+    def agregar_vuelo(self, codigo, origen, destino, asientos):
+        self.vuelos.append({
+            "codigo": codigo,
+            "origen": origen,
+            "destino": destino,
+            "asientos": asientos
+        })
+    def vuelos_hacia(self, destino):
+        resultado = []
+        for vuelo in self.vuelos:
+            if vuelo["destino"].lower() == destino.lower():
+                resultado.append(vuelo["codigo"])
+        return resultado
+    def vuelo_con_mas_asientos(self):
+        if len(self.vuelos) == 0:
+            return None
+        mayor = self.vuelos[0]
+        for vuelo in self.vuelos:
+            if vuelo["asientos"] > mayor["asientos"]:
+                mayor = vuelo
+        return mayor["codigo"]
+ae = Aerolinea()
+ae.agregar_vuelo("LA100", "Lima", "Bogotá", 180)
+ae.agregar_vuelo("AV220", "Lima", "Quito", 120)
+ae.agregar_vuelo("LA330", "Cusco", "Bogotá", 90)
+print(ae.vuelos_hacia("Bogotá"))
+print(ae.vuelo_con_mas_asientos())
+
+
+class TiendaJuegos:
+    def __init__(self):
+        self.juegos = {}
+    def agregar_juego(self, titulo, precio, stock):
+        self.juegos[titulo] = {"precio": precio, "stock": stock}
+    def vender(self, titulo, cantidad):
+        if titulo not in self.juegos:
+            return False
+        if self.juegos[titulo]["stock"] < cantidad:
+            return False
+        self.juegos[titulo]["stock"] -= cantidad
+        return True
+    def juegos_baratos(self, precio_max):
+        resultado = []
+        for titulo, datos in self.juegos.items():
+            if datos["precio"] <= precio_max:
+                resultado.append(titulo)
+        return resultado
+tj = TiendaJuegos()
+tj.agregar_juego("Zelda", 60, 10)
+tj.agregar_juego("Mario", 40, 5)
+print(tj.vender("Mario", 2))
+print(tj.juegos_baratos(50))
+
+
+class SistemaSolar:
+    def __init__(self):
+        self.planetas = {}
+    def agregar_planeta(self, nombre, distancia, lunas):
+        self.planetas[nombre] = {"distancia": distancia, "lunas": lunas}
+    def planeta_mas_lejos(self):
+        if len(self.planetas) == 0:
+            return None
+        lejano = None
+        mayor = -1
+        for nombre, datos in self.planetas.items():
+            if datos["distancia"] > mayor:
+                mayor = datos["distancia"]
+                lejano = nombre
+        return lejano
+    def planetas_con_lunas(self, minimo):
+        resultado = []
+        for nombre, datos in self.planetas.items():
+            if datos["lunas"] >= minimo:
+                resultado.append(nombre)
+        return resultado
+ss = SistemaSolar()
+ss.agregar_planeta("Tierra", 1, 1)
+ss.agregar_planeta("Marte", 1.5, 2)
+ss.agregar_planeta("Júpiter", 5.2, 95)
+print(ss.planeta_mas_lejos())
+print(ss.planetas_con_lunas(2))
+
+
+class Nomina:
+    def __init__(self):
+        self.empleados = {}
+    def registrar_empleado(self, nombre, cargo, sueldo):
+        self.empleados[nombre] = {"cargo": cargo, "sueldo": sueldo}
+    def sueldo_promedio(self):
+        if len(self.empleados) == 0:
+            return 0
+        return sum(e["sueldo"] for e in self.empleados.values()) / len(self.empleados)
+    def empleados_sobre_promedio(self):
+        promedio = self.sueldo_promedio()
+        resultado = []
+        for nombre, datos in self.empleados.items():
+            if datos["sueldo"] > promedio:
+                resultado.append(nombre)
+        return resultado
+    def empleados_por_cargo(self, cargo):
+        resultado = []
+        for nombre, datos in self.empleados.items():
+            if datos["cargo"].lower() == cargo.lower():
+                resultado.append(nombre)
+        return resultado
+nm = Nomina()
+nm.registrar_empleado("Ana", "analista", 2500)
+nm.registrar_empleado("Luis", "gerente", 4200)
+nm.registrar_empleado("Eva", "analista", 2300)
+print(nm.sueldo_promedio())
+print(nm.empleados_sobre_promedio())
+
+
+class Veterinaria:
+    def __init__(self):
+        self.mascotas = []
+    def registrar_mascota(self, nombre, especie, peso):
+        self.mascotas.append({"nombre": nombre, "especie": especie, "peso": peso})
+    def registrar_multiples(self, *mascotas):
+        for nombre, especie, peso in mascotas:
+            self.registrar_mascota(nombre, especie, peso)
+    def mascotas_por_especie(self, especie):
+        resultado = []
+        for m in self.mascotas:
+            if m["especie"].lower() == especie.lower():
+                resultado.append(m["nombre"])
+        return resultado
+    def mascota_mas_pesada(self):
+        if len(self.mascotas) == 0:
+            return None
+        mayor = self.mascotas[0]
+        for m in self.mascotas:
+            if m["peso"] > mayor["peso"]:
+                mayor = m
+        return mayor["nombre"]
+vet = Veterinaria()
+vet.registrar_multiples(("Max", "perro", 18.5), ("Michi", "gato", 4.2), ("Rocky", "perro", 22.0))
+print(vet.mascotas_por_especie("perro"))
+print(vet.mascota_mas_pesada())
+
+
+class CatalogoDiscos:
+    def __init__(self):
+        self.discos = {}
+    def agregar_disco(self, titulo, artista, anio):
+        self.discos[titulo] = {"artista": artista, "anio": anio}
+    def discos_despues_de(self, anio):
+        resultado = []
+        for titulo, datos in self.discos.items():
+            if datos["anio"] > anio:
+                resultado.append(titulo)
+        return resultado
+    def artistas_unicos(self):
+        artistas = set()
+        for datos in self.discos.values():
+            artistas.add(datos["artista"])
+        return artistas
+cd = CatalogoDiscos()
+cd.agregar_disco("Abbey Road", "Beatles", 1969)
+cd.agregar_disco("Thriller", "Jackson", 1982)
+cd.agregar_disco("Bad", "Jackson", 1987)
+print(cd.discos_despues_de(1970))
+print(cd.artistas_unicos())
+
+
+class RedSocial:
+    def __init__(self):
+        self.usuarios = {}
+    def crear_usuario(self, nombre):
+        if nombre not in self.usuarios:
+            self.usuarios[nombre] = []
+    def agregar_amigo(self, usuario, amigo):
+        if usuario in self.usuarios and amigo != usuario:
+            if amigo not in self.usuarios[usuario]:
+                self.usuarios[usuario].append(amigo)
+    def usuario_con_mas_amigos(self):
+        if len(self.usuarios) == 0:
+            return None
+        mayor_usuario = None
+        mayor = -1
+        for usuario, amigos in self.usuarios.items():
+            if len(amigos) > mayor:
+                mayor = len(amigos)
+                mayor_usuario = usuario
+        return mayor_usuario
+    def amigos_en_comun(self, u1, u2):
+        if u1 not in self.usuarios or u2 not in self.usuarios:
+            return []
+        comunes = []
+        for amigo in self.usuarios[u1]:
+            if amigo in self.usuarios[u2]:
+                comunes.append(amigo)
+        return comunes
+rs = RedSocial()
+rs.crear_usuario("Ana")
+rs.crear_usuario("Bob")
+rs.crear_usuario("Eva")
+rs.agregar_amigo("Ana", "Bob")
+rs.agregar_amigo("Ana", "Eva")
+rs.agregar_amigo("Bob", "Eva")
+print(rs.usuario_con_mas_amigos())
+print(rs.amigos_en_comun("Ana", "Bob"))
+
+
+class Parqueadero:
+    def __init__(self):
+        self.vehiculos = {}
+    def ingresar(self, placa, tipo, horas):
+        self.vehiculos[placa] = {"tipo": tipo, "horas": horas}
+    def cobrar(self, placa, tarifa_hora):
+        if placa not in self.vehiculos:
+            return 0
+        return self.vehiculos[placa]["horas"] * tarifa_hora
+    def vehiculos_por_tipo(self, tipo):
+        resultado = []
+        for placa, datos in self.vehiculos.items():
+            if datos["tipo"].lower() == tipo.lower():
+                resultado.append(placa)
+        return resultado
+    def mas_horas(self):
+        if len(self.vehiculos) == 0:
+            return None
+        mayor_placa = None
+        mayor = -1
+        for placa, datos in self.vehiculos.items():
+            if datos["horas"] > mayor:
+                mayor = datos["horas"]
+                mayor_placa = placa
+        return mayor_placa
+pk = Parqueadero()
+pk.ingresar("ABC123", "auto", 3)
+pk.ingresar("MOTO9", "moto", 5)
+pk.ingresar("XYZ777", "auto", 2)
+print(pk.cobrar("ABC123", 4))
+print(pk.vehiculos_por_tipo("auto"))
+print(pk.mas_horas())
